@@ -1,55 +1,90 @@
-@import url('https://fonts.googleapis.com/css2?family=Charm&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mali:wght@300;400;600&display=swap');
 
 body {
-    font-family: 'Charm', cursive;
+    font-family: 'Mali', cursive;
     background: url('bg.png') no-repeat center center fixed;
     background-size: cover;
     text-align: center;
     color: #d63384;
     overflow: hidden;
-    margin: 0;
-    padding: 0;
+    padding: 20px;
 }
 
+/* ตกแต่งองค์ประกอบหลัก */
 .container {
     max-width: 500px;
     margin: 50px auto;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 10;
 }
 
+/* ตกแต่งหัวข้อ */
 h1 {
     color: #b2226b;
     font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 20px;
 }
 
+/* ช่องกรอกข้อมูล */
 input, textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin: 10px 0;
-    border: 1px solid #f8a8c6;
-    border-radius: 5px;
+    border: 2px solid #f8a8c6;
+    border-radius: 8px;
     font-size: 18px;
+    font-family: 'Mali', cursive;
+    background: rgba(255, 255, 255, 0.9);
+    outline: none;
 }
 
+textarea {
+    resize: none;
+    height: 100px;
+}
+
+/* ปุ่มกด */
 button {
     background-color: #ff69b4;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 18px;
-    margin: 5px;
+    font-family: 'Mali', cursive;
+    transition: 0.3s ease-in-out;
 }
 
 button:hover {
     background-color: #e653a0;
+    transform: scale(1.05);
 }
 
-/* พื้นที่ข้อความลอย */
+/* ตกแต่งภาพประกอบ */
+.decoration {
+    position: absolute;
+    width: 120px;
+    opacity: 0.8;
+    z-index: 1;
+}
+
+.decoration1 {
+    top: 10%;
+    left: 5%;
+}
+
+.decoration2 {
+    bottom: 10%;
+    right: 5%;
+}
+
+/* พื้นที่แสดงข้อความลอยขึ้น */
 .floating-container {
     position: fixed;
     bottom: 0;
@@ -75,13 +110,14 @@ button:hover {
 
 /* ข้อความที่ส่ง */
 .floating-item .message {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.85);
     border-left: 5px solid #ff69b4;
     padding: 10px;
     margin-top: 5px;
     border-radius: 10px;
     font-size: 18px;
     color: #b2226b;
+    font-family: 'Mali', cursive;
 }
 
 /* เอฟเฟกต์ลอยขึ้น */
@@ -90,26 +126,27 @@ button:hover {
     100% { transform: translateY(-100vh); opacity: 0; }
 }
 
-/* ตกแต่ง */
-.decoration {
-    position: absolute;
-    width: 100px;
-    opacity: 0.8;
-}
-
-.decoration1 {
-    top: 20px;
-    left: 20px;
-}
-
-.decoration2 {
-    bottom: 20px;
-    right: 20px;
-}
-
-/* รองรับมือถือ */
+/* ปรับให้รองรับทั้งมือถือและคอม */
 @media screen and (max-width: 600px) {
     .container {
-        width: 90%;
+        max-width: 90%;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    input, textarea {
+        font-size: 16px;
+    }
+
+    button {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+
+    .decoration {
+        width: 80px;
     }
 }
