@@ -1,20 +1,20 @@
-// Firebase Configuration
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getDatabase, ref, set, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
 const firebaseConfig = {
-    apiKey: "AIzaSyDn5AfvYFsFXAxcHN1vxR-8uoM4QDDhyak",
-    authDomain: "lovekrukub.firebaseapp.com",
-    databaseURL: "https://lovekrukub-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "lovekrukub",
-    storageBucket: "lovekrukub.firebasestorage.app",
-    messagingSenderId: "994145435943",
-    appId: "1:994145435943:web:4850f65240eba04fea6902",
-    measurementId: "G-HN9HKP6LCK"
+    apiKey: "AIzaSyCqZRDgeN5itgNsX3lJIWP4e0djVfpInwk",
+    authDomain: "what-do-you-want-tell-teacher.firebaseapp.com",
+    databaseURL: "https://what-do-you-want-tell-teacher-default-rtdb.firebaseio.com",
+    projectId: "what-do-you-want-tell-teacher",
+    storageBucket: "what-do-you-want-tell-teacher.firebasestorage.app",
+    messagingSenderId: "614070987596",
+    appId: "1:614070987596:web:3639b0defdb33cc0bcfde9",
+    measurementId: "G-ZY48RBELXE"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-// ฟังก์ชันสำหรับส่งข้อความ
 function sendMessage() {
     let name = document.getElementById("name").value;
     let studentClass = document.getElementById("class").value;
@@ -22,17 +22,10 @@ function sendMessage() {
     let message = document.getElementById("message").value;
 
     if (name && studentClass && number && message) {
-        const messageRef = db.ref('messages/' + new Date().getTime());
-        messageRef.set({
-            name: name,
-            class: studentClass,
-            number: number,
-            message: message
-        });
+        const messageRef = ref(db, 'messages/' + new Date().getTime());
+        set(messageRef, { name, class: studentClass, number, message });
 
         alert("ครูรับเรื่องแล้วจ้า!! 💖");
-
-        // ล้างข้อมูล
         document.getElementById("name").value = "";
         document.getElementById("class").value = "";
         document.getElementById("number").value = "";
@@ -40,31 +33,9 @@ function sendMessage() {
     }
 }
 
-// แสดงข้อความในลักษณะลอยขึ้น
-const floatingContainer = document.getElementById("floatingContainer");
+function viewAllMessages() {
+    window.location.href = "messages.html";
+}
 
-firebase.database().ref('messages').on('child_added', (snapshot) => {
-    let data = snapshot.val();
-
-    let floatingItem = document.createElement("div");
-    floatingItem.classList.add("floating-item");
-
-    let heart = document.createElement("img");
-    heart.src = "heart.png"; // หัวใจที่ใช้แสดง (สามารถเปลี่ยนเป็นไฟล์ที่ต้องการ)
-
-    let messageText = document.createElement("div");
-    messageText.classList.add("message");
-    messageText.innerHTML = `💬 ${data.message} <br> - ${data.name}, ชั้น ${data.class}, เลขที่ ${data.number}`;
-
-    floatingItem.appendChild(heart);
-    floatingItem.appendChild(messageText);
-
-    // ตั้งค่าตำแหน่งสุ่ม
-    floatingItem.style.left = Math.random() * 80 + "vw";
-    floatingContainer.appendChild(floatingItem);
-
-    // ลบข้อความเมื่อหมดเวลา
-    setTimeout(() => {
-        floatingContainer.removeChild(floatingItem);
-    }, 10000);
-});
+window.sendMessage = sendMessage;
+window.viewAllMessages = viewAllMessages;
