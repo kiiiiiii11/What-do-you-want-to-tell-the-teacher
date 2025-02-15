@@ -29,14 +29,19 @@ window.sendMessage = function() {
             class: studentClass,
             number: number,
             message: message
+        }).then(() => {
+            alert("ครูรับเรื่องแล้วจ้า!! 💖");
+
+            // เคลียร์ฟอร์ม
+            document.getElementById("name").value = "";
+            document.getElementById("class").value = "";
+            document.getElementById("number").value = "";
+            document.getElementById("message").value = "";
+        }).catch((error) => {
+            console.error("เกิดข้อผิดพลาด: ", error);
+            alert("เกิดข้อผิดพลาด กรุณาลองใหม่!");
         });
 
-        alert("ครูรับเรื่องแล้วจ้า!! 💖");
-
-        document.getElementById("name").value = "";
-        document.getElementById("class").value = "";
-        document.getElementById("number").value = "";
-        document.getElementById("message").value = "";
     } else {
         alert("กรุณากรอกข้อมูลให้ครบทุกช่อง!");
     }
