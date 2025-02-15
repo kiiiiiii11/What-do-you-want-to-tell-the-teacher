@@ -1,4 +1,6 @@
-// 🔥 Firebase Config
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getDatabase, ref, set, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
 const firebaseConfig = {
     apiKey: "AIzaSyCqZRDgeN5itgNsX3lJIWP4e0djVfpInwk",
     authDomain: "what-do-you-want-tell-teacher.firebaseapp.com",
@@ -10,11 +12,9 @@ const firebaseConfig = {
     measurementId: "G-ZY48RBELXE"
 };
 
-// 🔥 เชื่อม Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-// ✅ ฟังก์ชันบันทึกข้อความ
 function sendMessage() {
     let name = document.getElementById("name").value;
     let studentClass = document.getElementById("class").value;
@@ -22,17 +22,10 @@ function sendMessage() {
     let message = document.getElementById("message").value;
 
     if (name && studentClass && number && message) {
-        let newMessageRef = db.ref("messages").push();
-        newMessageRef.set({
-            name: name,
-            class: studentClass,
-            number: number,
-            message: message
-        });
+        const messageRef = ref(db, 'messages/' + new Date().getTime());
+        set(messageRef, { name, class: studentClass, number, message });
 
         alert("ครูรับเรื่องแล้วจ้า!! 💖");
-
-        // ล้างช่องกรอกข้อมูล
         document.getElementById("name").value = "";
         document.getElementById("class").value = "";
         document.getElementById("number").value = "";
@@ -40,33 +33,9 @@ function sendMessage() {
     }
 }
 
-// ✅ แสดงข้อความแบบเรียลไทม์
-db.ref("messages").on("child_added", function(snapshot) {
-    let data = snapshot.val();
-    let floatingContainer = document.getElementById("floatingContainer");
-
-    let floatingItem = document.createElement("div");
-    floatingItem.classList.add("floating-item");
-
-    let heart = document.createElement("img");
-    heart.src = "heart.png";
-
-    let messageText = document.createElement("div");
-    messageText.classList.add("message");
-    messageText.innerHTML = `💬 ${data.message} <br> - ${data.name}, ชั้น ${data.class}, เลขที่ ${data.number}`;
-
-    floatingItem.appendChild(heart);
-    floatingItem.appendChild(messageText);
-
-    floatingItem.style.left = Math.random() * 80 + "vw";
-    floatingContainer.appendChild(floatingItem);
-
-    setTimeout(() => {
-        floatingContainer.removeChild(floatingItem);
-    }, 10000);
-});
-
-// ✅ ปุ่มดูข้อความทั้งหมด
-function showMessages() {
+function viewAllMessages() {
     window.location.href = "messages.html";
 }
+
+window.sendMessage = sendMessage;
+window.viewAllMessages = viewAllMessages;
