@@ -7,10 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <img src="decoration1.png" class="decoration decoration-left">
-    <img src="decoration2.png" class="decoration decoration-right">
-
     <div class="container">
         <h1>มีอะไรอยากบอกครูไหมคะ? 💕</h1>
         <input type="text" id="name" placeholder="ชื่อ" required>
@@ -18,7 +14,16 @@
         <input type="text" id="number" placeholder="เลขที่" required>
         <textarea id="message" rows="4" placeholder="พิมพ์ข้อความที่อยากบอกครู..." required></textarea>
         <button onclick="sendMessage()">💌 ส่งข้อความ</button>
-        <a href="messages.html" class="view-messages-btn">📜 ดูข้อความทั้งหมด</a>
+        <button onclick="toggleMessages()">👀 ดูข้อความของทุกคน</button> <!-- ปุ่มใหม่ -->
+    </div>
+
+    <!-- พื้นที่แสดงข้อความลอยขึ้น -->
+    <div class="floating-container" id="floatingContainer"></div>
+
+    <!-- พื้นที่แสดงข้อความทั้งหมด -->
+    <div class="messages-container" id="messagesContainer">
+        <div class="messages-box" id="messagesBox"></div>
+        <button onclick="closeMessages()">❌ ปิดการดูข้อความ</button>
     </div>
 
     <script type="module" src="script.js"></script>
