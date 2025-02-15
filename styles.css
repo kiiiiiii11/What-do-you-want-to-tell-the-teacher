@@ -1,90 +1,114 @@
-/* ตั้งค่าพื้นฐานของหน้าเว็บ */
+@import url('https://fonts.googleapis.com/css2?family=Charm&display=swap');
+
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #ffebf3;
+    font-family: 'Charm', cursive;
+    background: url('bg.png') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+    color: #d63384;
+    overflow: hidden;
     margin: 0;
     padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
 }
 
-/* กล่องเนื้อหาหลัก */
 .container {
-    background-color: white;
+    max-width: 500px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.9);
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 90%;
-    width: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* ปรับขนาดปุ่มและอินพุต */
-input, textarea, button {
+h1 {
+    color: #b2226b;
+    font-size: 30px;
+}
+
+input, textarea {
     width: 100%;
-    margin: 5px 0;
     padding: 10px;
-    border: 1px solid #ff69b4;
+    margin: 10px 0;
+    border: 1px solid #f8a8c6;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 button {
     background-color: #ff69b4;
     color: white;
+    padding: 10px 20px;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 18px;
+    margin: 5px;
 }
 
 button:hover {
-    background-color: #e0559b;
+    background-color: #e653a0;
 }
 
-/* ทำให้แสดงข้อความลอยขึ้น */
+/* พื้นที่ข้อความลอย */
 .floating-container {
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 40vh;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
     overflow: hidden;
 }
 
-/* ข้อความแต่ละอัน */
 .floating-item {
     position: absolute;
+    bottom: -50px;
+    text-align: center;
     animation: floatUp 10s linear infinite;
 }
 
-/* ให้ข้อความลอยขึ้น */
-@keyframes floatUp {
-    0% { transform: translateY(100vh); opacity: 1; }
-    100% { transform: translateY(-50px); opacity: 0; }
+/* รูปหัวใจ */
+.floating-item img {
+    width: 50px;
+    height: 50px;
 }
 
-/* รายการข้อความทั้งหมด */
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    background-color: #fff;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 10px;
+/* ข้อความที่ส่ง */
+.floating-item .message {
+    background-color: rgba(255, 255, 255, 0.8);
     border-left: 5px solid #ff69b4;
-    text-align: left;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 10px;
     font-size: 18px;
     color: #b2226b;
 }
 
-/* ปรับให้รองรับมือถือ */
-@media (max-width: 480px) {
+/* เอฟเฟกต์ลอยขึ้น */
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100vh); opacity: 0; }
+}
+
+/* ตกแต่ง */
+.decoration {
+    position: absolute;
+    width: 100px;
+    opacity: 0.8;
+}
+
+.decoration1 {
+    top: 20px;
+    left: 20px;
+}
+
+.decoration2 {
+    bottom: 20px;
+    right: 20px;
+}
+
+/* รองรับมือถือ */
+@media screen and (max-width: 600px) {
     .container {
         width: 90%;
     }
