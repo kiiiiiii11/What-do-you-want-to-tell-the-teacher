@@ -1,108 +1,178 @@
-/* General Styling */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap');
+
 body {
     font-family: 'Kanit', sans-serif;
-    background-color: #f8e0e6;
-    margin: 0;
-    padding: 0;
+    background: url('bg.png') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+    color: #d63384;
+    overflow: hidden;
 }
 
 .container {
-    text-align: center;
-    margin: 20px;
+    max-width: 500px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.9);
     padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: auto;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    font-size: 24px;
-    color: #e83e8c;
-    font-weight: bold;
+    color: #b2226b;
+    font-size: 30px;
 }
 
-textarea, input {
-    width: 80%;
+input, textarea {
+    width: 100%;
     padding: 10px;
     margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    font-size: 16px;
+    border: 1px solid #f8a8c6;
+    border-radius: 5px;
+    font-size: 18px;
 }
 
 button {
+    background-color: #ff69b4;
+    color: white;
     padding: 10px 20px;
-    background-color: #e83e8c;
     border: none;
-    color: #fff;
-    font-size: 16px;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
 }
 
 button:hover {
-    background-color: #d63384;
+    background-color: #e653a0;
 }
 
-/* เอฟเฟกต์หัวใจลอยขึ้น */
-.floating-heart {
-    position: absolute;
+/* พื้นที่แสดงข้อความลอยขึ้น */
+.floating-container {
+    position: fixed;
     bottom: 0;
-    width: 100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    opacity: 1;
-    transition: transform 5s linear, opacity 5s ease-in;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
 }
 
-.heart-img {
+/* รูปหัวใจและข้อความลอย */
+.floating-item {
+    position: absolute;
+    bottom: -50px;
+    text-align: center;
+    animation: floatUp 10s linear infinite;
+}
+
+.floating-item img {
     width: 50px;
     height: 50px;
-    animation: float 5s linear infinite;
 }
 
-.floating-text {
-    background: rgba(255, 255, 255, 0.8);
-    color: #d63384;
-    padding: 5px 10px;
-    border-radius: 10px;
-    text-align: center;
-    font-size: 16px;
+.floating-item .message {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-left: 5px solid #ff69b4;
+    padding: 10px;
     margin-top: 5px;
+    border-radius: 10px;
+    font-size: 18px;
+    color: #b2226b;
 }
 
-@keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
+/* เอฟเฟกต์ลอยขึ้น */
+@keyframes floatUp {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-100vh); opacity: 0; }
 }
 
-/* สำหรับแสดงข้อความ */
-#messagesContainer {
-    margin-top: 20px;
+/* ส่วนของกล่องดูข้อความทั้งหมด */
+.messages-container {
+    display: none; /* ซ่อนตอนเริ่มต้น */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    overflow-y: scroll;
+    text-align: left;
+    z-index: 10;
 }
 
-#messagesContainer div {
-    background-color: #f8e0e6;
+.messages-box {
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.messages-box .message {
+    background-color: #fff;
     margin: 10px 0;
     padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #ff69b4;
+    font-size: 16px;
+    color: #b2226b;
 }
 
-a.back-button {
+button {
     margin-top: 20px;
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #d63384;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
 }
 
-a.back-button:hover {
-    background-color: #e83e8c;
+/* ทำให้หน้าเว็บตอบสนองตามขนาดหน้าจอ */
+@media (max-width: 768px) {
+    /* สำหรับมือถือและแท็บเล็ต */
+    .container {
+        padding: 15px;
+        margin: 20px;
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    input, textarea {
+        font-size: 16px;
+    }
+
+    button {
+        font-size: 16px;
+    }
+
+    .floating-item .message {
+        font-size: 16px;
+    }
+
+    /* ปรับขนาดของหัวใจให้เล็กลง */
+    .floating-item img {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* สำหรับหน้าจอขนาดเล็ก เช่น โทรศัพท์มือถือ */
+    h1 {
+        font-size: 20px;
+    }
+
+    input, textarea {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    .floating-item .message {
+        font-size: 14px;
+    }
+
+    /* ปรับขนาดของหัวใจให้เล็กลงอีก */
+    .floating-item img {
+        width: 30px;
+        height: 30px;
+    }
 }
