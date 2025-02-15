@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
+
+body {
+    font-family: 'Sriracha', cursive;
+    background: url('bg.png') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+    color: #d63384;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+h1 {
+    color: #b2226b;
+    font-size: 30px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #f8a8c6;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+button {
+    background-color: #ff69b4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+button:hover {
+    background-color: #e653a0;
+}
+
+.view-messages-btn, .back-btn {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    background: #ff69b4;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.view-messages-btn:hover, .back-btn:hover {
+    background: #e653a0;
+}
+
+/* สไตล์สำหรับข้อความ */
+#messages-list {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.message-box {
+    background: rgba(255, 255, 255, 0.8);
+    border-left: 5px solid #ff69b4;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    font-size: 18px;
+    color: #b2226b;
+}
+
+/* ตกแต่งด้วยภาพ */
+.decoration {
+    position: absolute;
+    width: 150px;
+}
+
+.decoration-left {
+    top: 10%;
+    left: 5%;
+}
+
+.decoration-right {
+    top: 15%;
+    right: 5%;
+}
