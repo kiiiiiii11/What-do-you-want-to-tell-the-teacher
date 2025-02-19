@@ -1,6 +1,5 @@
-// Import Firebase SDK
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, set, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getDatabase, ref, set, onChildAdded, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -20,78 +19,48 @@ const db = getDatabase(app);
 
 // ฟังก์ชันสำหรับส่งข้อความ
 function sendMessage() {
-    let name = document.getElementById("name").value;
-    let studentClass = document.getElementById("class").value;
-    let number = document.getElementById("number").value;
-    let message = document.getElementById("message").value;
+    let nickname = document.getElementById("nickname").value;
+    let room = document.getElementById("room").value;
+    let teaching = document.getElementById("teaching").value;
+    let personality = document.getElementById("personality").value;
 
-    if (name && studentClass && number && message) {
+    if (nickname && room && teaching && personality) {
         const messageRef = ref(db, 'messages/' + new Date().getTime());
         set(messageRef, {
-            name: name,
-            class: studentClass,
-            number: number,
-            message: message
+            nickname: nickname,
+            room: room,
+            teaching: teaching,
+            personality: personality
         });
 
         alert("ครูรับเรื่องแล้วจ้า!! 💖");
 
-        // ล้างข้อมูล
-        document.getElementById("name").value = "";
-        document.getElementById("class").value = "";
-        document.getElementById("number").value = "";
-        document.getElementById("message").value = "";
+        document.getElementById("nickname").value = "";
+        document.getElementById("room").value = "";
+        document.getElementById("teaching").value = "";
+        document.getElementById("personality").value = "";
     }
 }
 
-// ฟังก์ชันเพื่อเปิด/ปิดการดูข้อความ
-function toggleMessages() {
-    const messagesContainer = document.getElementById("messagesContainer");
-    messagesContainer.style.display = messagesContainer.style.display === "block" ? "none" : "block";
+// แสดงข้อความทั้งหมด
+function showMessages() {
+    document.getElementById("messagesContainer").style.display = "block";
 }
 
-// ฟังก์ชันปิดการดูข้อความ
-function closeMessages() {
+function hideMessages() {
     document.getElementById("messagesContainer").style.display = "none";
 }
 
-// แสดงข้อความในลักษณะลอยขึ้นพร้อมหัวใจ
-const floatingContainer = document.getElementById("floatingContainer");
-const messagesBox = document.getElementById("messagesBox");
-
+// แสดงข้อความแบบลอยขึ้น
 onChildAdded(ref(db, 'messages'), (snapshot) => {
     let data = snapshot.val();
+    let messageBox = document.createElement("div");
+    messageBox.classList.add("message");
+    messageBox.innerHTML = `💬 ${data.personality} <br> - ${data.nickname}, ห้อง ${data.room}`;
 
-    let floatingItem = document.createElement("div");
-    floatingItem.classList.add("floating-item");
-
-    let heart = document.createElement("img");
-    heart.src = "heart.png"; // หัวใจที่ใช้แสดง (สามารถเปลี่ยนเป็นไฟล์ที่ต้องการ)
-
-    let messageText = document.createElement("div");
-    messageText.classList.add("message");
-    messageText.innerHTML = `💬 ${data.message} <br> - ${data.name}, ชั้น ${data.class}, เลขที่ ${data.number}`;
-
-    floatingItem.appendChild(heart);
-    floatingItem.appendChild(messageText);
-
-    // ตั้งค่าตำแหน่งสุ่ม
-    floatingItem.style.left = Math.random() * 80 + "vw";
-    floatingContainer.appendChild(floatingItem);
-
-    // ลบข้อความเมื่อหมดเวลา
-    setTimeout(() => {
-        floatingContainer.removeChild(floatingItem);
-    }, 10000);
-
-    // แสดงข้อความทั้งหมดในกล่อง
-    let messageDiv = document.createElement("div");
-    messageDiv.classList.add("message");
-    messageDiv.innerHTML = `💬 ${data.message} <br> - ${data.name}, ชั้น ${data.class}, เลขที่ ${data.number}`;
-    messagesBox.appendChild(messageDiv);
+    document.getElementById("messagesBox").appendChild(messageBox);
 });
 
-// ทำให้ฟังก์ชันใช้งานได้ใน HTML
 window.sendMessage = sendMessage;
-window.toggleMessages = toggleMessages;
-window.closeMessages = closeMessages;
+window.showMessages = showMessages;
+window.hideMessages = hideMessages;
