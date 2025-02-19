@@ -89,7 +89,7 @@ button:hover {
 
 /* ส่วนของกล่องดูข้อความทั้งหมด */
 .messages-container {
-    display: none; /* ซ่อนตอนเริ่มต้น */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -114,65 +114,4 @@ button:hover {
     border-left: 5px solid #ff69b4;
     font-size: 16px;
     color: #b2226b;
-}
-
-button {
-    margin-top: 20px;
-}
-
-/* ทำให้หน้าเว็บตอบสนองตามขนาดหน้าจอ */
-@media (max-width: 768px) {
-    /* สำหรับมือถือและแท็บเล็ต */
-    .container {
-        padding: 15px;
-        margin: 20px;
-        max-width: 100%;
-    }
-
-    h1 {
-        font-size: 24px;
-    }
-
-    input, textarea {
-        font-size: 16px;
-    }
-
-    button {
-        font-size: 16px;
-    }
-
-    .floating-item .message {
-        font-size: 16px;
-    }
-
-    /* ปรับขนาดของหัวใจให้เล็กลง */
-    .floating-item img {
-        width: 40px;
-        height: 40px;
-    }
-}
-
-@media (max-width: 480px) {
-    /* สำหรับหน้าจอขนาดเล็ก เช่น โทรศัพท์มือถือ */
-    h1 {
-        font-size: 20px;
-    }
-
-    input, textarea {
-        font-size: 14px;
-    }
-
-    button {
-        font-size: 14px;
-    }
-
-    .floating-item .message {
-        font-size: 14px;
-    }
-
-    /* ปรับขนาดของหัวใจให้เล็กลงอีก */
-    .floating-item img {
-        width: 30px;
-        height: 30px;
-    }
 }
