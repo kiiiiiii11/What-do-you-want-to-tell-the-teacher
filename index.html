@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💖 มีอะไรอยากบอกครูไหมคะ? 💬</title>
+    <title>มีอะไรอยากจะบอกครูไหมคะ?</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>มีอะไรอยากบอกครูไหมคะ? 💕</h1>
-        <input type="text" id="nickname" placeholder="นามแฝง/นามในวงการ" required>
-        <input type="text" id="room" placeholder="ห้อง" required>
-        <input type="text" id="teaching" placeholder="การจัดการเรียนการสอน" required>
-        <textarea id="personality" rows="4" placeholder="ลักษณะบุคลิกภาพ" required></textarea>
-        <button onclick="sendMessage()">💌 ส่งข้อความ</button>
-        <button onclick="showMessages()">📜 ดูข้อความของทุกคน</button>
+
+    <h1>💖 มีอะไรอยากจะบอกครูไหมคะ? 💖</h1>
+
+    <div class="form-container">
+        <input type="text" id="nickname" placeholder="🌸 นามแฝง/นามในวงการ">
+        <input type="text" id="studentClass" placeholder="🏫 ห้อง">
+        <input type="text" id="teaching" placeholder="📚 การจัดการเรียนการสอน">
+        <input type="text" id="personality" placeholder="😊 ลักษณะบุคลิกภาพ">
+        <button onclick="sendMessage()">ส่งข้อความ</button>
+        <button class="view-messages-btn" onclick="viewMessages()">ดูข้อความของทุกคน</button>
     </div>
 
-    <!-- พื้นที่แสดงข้อความลอยขึ้น -->
     <div class="floating-container" id="floatingContainer"></div>
 
-    <!-- กล่องดูข้อความทั้งหมด -->
     <div class="messages-container" id="messagesContainer">
-        <h2>📜 ข้อความทั้งหมด</h2>
+        <h2>💌 ข้อความจากทุกคน</h2>
         <div class="messages-box" id="messagesBox"></div>
-        <button onclick="hideMessages()">❌ ปิด</button>
+        <button onclick="closeMessages()">ปิด</button>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+
 </body>
 </html>
