@@ -1,111 +1,92 @@
-// Import Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, set, onChildAdded, get } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyCqZRDgeN5itgNsX3lJIWP4e0djVfpInwk",
-    authDomain: "what-do-you-want-tell-teacher.firebaseapp.com",
-    databaseURL: "https://what-do-you-want-tell-teacher-default-rtdb.firebaseio.com",
-    projectId: "what-do-you-want-tell-teacher",
-    storageBucket: "what-do-you-want-tell-teacher.firebasestorage.app",
-    messagingSenderId: "614070987596",
-    appId: "1:614070987596:web:3639b0defdb33cc0bcfde9",
-    measurementId: "G-ZY48RBELXE"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+import { database, ref, push, onValue } from "./firebase.js";
 
 // ฟังก์ชันส่งข้อความ
-function sendMessage() {
-    let nickname = document.getElementById("nickname").value;
-    let studentClass = document.getElementById("class").value;
+document.getElementById("submit-btn").addEventListener("click", () => {
+    let name = document.getElementById("name").value;
+    let room = document.getElementById("room").value;
     let teaching = document.getElementById("teaching").value;
     let personality = document.getElementById("personality").value;
 
-    if (nickname && studentClass && teaching && personality) {
-        const messageRef = ref(db, 'messages/' + new Date().getTime());
-        set(messageRef, {
-            nickname: nickname,
-            studentClass: studentClass,
-            teaching: teaching,
-            personality: personality
-        });
-
-        alert("ครูรับเรื่องแล้วจ้า!! 💖");
-
-        // ล้างข้อมูล
-        document.getElementById("nickname").value = "";
-        document.getElementById("class").value = "";
-        document.getElementById("teaching").value = "";
-        document.getElementById("personality").value = "";
+    if (name.trim() === "" || room.trim() === "" || teaching.trim() === "" || personality.trim() === "") {
+        alert("กรุณากรอกข้อมูลให้ครบทุกช่อง!");
+        return;
     }
+
+    let messageRef = ref(database, "messages");
+    push(messageRef, {
+        name: name,
+        room: room,
+        teaching: teaching,
+        personality: personality
+    }).then(() => {
+        alert("ครูรับเรื่องแล้วจ้า!!");
+        createFloatingHeart(name, room, teaching, personality);
+        clearForm();
+    }).catch((error) => {
+        console.error("Error sending message:", error);
+    });
+});
+
+// ฟังก์ชันล้างข้อมูลหลังส่ง
+function clearForm() {
+    document.getElementById("name").value = "";
+    document.getElementById("room").value = "";
+    document.getElementById("teaching").value = "";
+    document.getElementById("personality").value = "";
 }
 
-// แสดงข้อความแบบลอยขึ้นไป
-const floatingContainer = document.getElementById("floatingContainer");
-
-onChildAdded(ref(db, 'messages'), (snapshot) => {
-    let data = snapshot.val();
+// ฟังก์ชันสร้างหัวใจ + ข้อความลอยขึ้น
+function createFloatingHeart(name, room, teaching, personality) {
+    let floatingContainer = document.querySelector(".floating-container");
 
     let floatingItem = document.createElement("div");
     floatingItem.classList.add("floating-item");
+    floatingItem.style.left = `${Math.random() * 80 + 10}%`;
 
-    let heart = document.createElement("img");
-    heart.src = "heart.png"; // รูปหัวใจ
-    heart.classList.add("floating-heart");
+    let heartImg = document.createElement("img");
+    heartImg.src = "heart.png";
+    heartImg.classList.add("floating-heart");
 
-    let messageText = document.createElement("div");
-    messageText.classList.add("floating-message");
-    messageText.innerHTML = `💬 ${data.teaching} <br> - ${data.nickname}, ห้อง ${data.studentClass}`;
+    let floatingMessage = document.createElement("div");
+    floatingMessage.classList.add("floating-message");
+    floatingMessage.innerHTML = `<b>${name}</b> (${room})<br>${teaching}<br>${personality}`;
 
-    floatingItem.appendChild(heart);
-    floatingItem.appendChild(messageText);
-
-    floatingItem.style.left = Math.random() * 80 + "vw";
+    floatingItem.appendChild(heartImg);
+    floatingItem.appendChild(floatingMessage);
     floatingContainer.appendChild(floatingItem);
 
     setTimeout(() => {
-        floatingContainer.removeChild(floatingItem);
-    }, 10000);
+        floatingItem.remove();
+    }, 12000);
+}
+
+// ฟังก์ชันเปิดดูข้อความทั้งหมด
+document.getElementById("view-messages-btn").addEventListener("click", () => {
+    let messagesContainer = document.getElementById("messages-container");
+    let messagesBox = document.getElementById("messages-box");
+
+    messagesBox.innerHTML = "<p>กำลังโหลดข้อมูล...</p>";
+
+    let messageRef = ref(database, "messages");
+    onValue(messageRef, (snapshot) => {
+        messagesBox.innerHTML = "";
+        if (snapshot.exists()) {
+            snapshot.forEach((childSnapshot) => {
+                let data = childSnapshot.val();
+                let messageItem = document.createElement("div");
+                messageItem.classList.add("message-box");
+                messageItem.innerHTML = `<b>${data.name}</b> (${data.room})<br>${data.teaching}<br>${data.personality}`;
+                messagesBox.appendChild(messageItem);
+            });
+        } else {
+            messagesBox.innerHTML = "<p>ยังไม่มีข้อความ</p>";
+        }
+    });
+
+    messagesContainer.style.display = "block";
 });
 
-// แสดงข้อความทั้งหมด
-function viewMessages() {
-    let messagesBox = document.getElementById("messagesBox");
-    messagesBox.innerHTML = "";
-
-    get(ref(db, "messages")).then((snapshot) => {
-        if (!snapshot.exists()) {
-            messagesBox.innerHTML = "<p>ยังไม่มีข้อความ</p>";
-            return;
-        }
-
-        snapshot.forEach((childSnapshot) => {
-            let data = childSnapshot.val();
-            let messageElement = document.createElement("div");
-            messageElement.className = "message-box";
-            messageElement.innerHTML = `
-                <strong>💖 ${data.nickname}</strong> <br>
-                🏫 ห้อง: ${data.studentClass} <br>
-                📚 ${data.teaching} <br>
-                😊 ${data.personality}
-            `;
-            messagesBox.appendChild(messageElement);
-        });
-
-        document.getElementById("messagesContainer").style.display = "block";
-    });
-}
-
-// ปิดกล่องข้อความ
-function closeMessages() {
-    document.getElementById("messagesContainer").style.display = "none";
-}
-
-// ทำให้ฟังก์ชันสามารถเรียกใช้ใน HTML
-window.sendMessage = sendMessage;
-window.viewMessages = viewMessages;
-window.closeMessages = closeMessages;
+// ปิดหน้าต่างข้อความทั้งหมด
+document.getElementById("close-messages-btn").addEventListener("click", () => {
+    document.getElementById("messages-container").style.display = "none";
+});
