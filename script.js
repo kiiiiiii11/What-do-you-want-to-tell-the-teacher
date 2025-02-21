@@ -19,7 +19,7 @@ document.getElementById("submit-btn").addEventListener("click", () => {
         teaching: teaching,
         personality: personality
     }).then(() => {
-        alert("ครูรับเรื่องแล้วจ้า!!");
+        alert("ครูรับเรื่องแล้วจ้า💕");
         createFloatingHeart(name, room, teaching, personality);
         clearForm();
     }).catch((error) => {
