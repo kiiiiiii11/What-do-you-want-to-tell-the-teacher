@@ -1,92 +1,77 @@
-import { database, ref, push, onValue } from "./firebase.js";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, get, child } from "firebase/database";
 
-// ฟังก์ชันส่งข้อความ
-document.getElementById("submit-btn").addEventListener("click", () => {
-    let name = document.getElementById("name").value;
-    let room = document.getElementById("room").value;
-    let teaching = document.getElementById("teaching").value;
-    let personality = document.getElementById("personality").value;
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCqZRDgeN5itgNsX3lJIWP4e0djVfpInwk",
+  authDomain: "what-do-you-want-tell-teacher.firebaseapp.com",
+  databaseURL: "https://what-do-you-want-tell-teacher-default-rtdb.firebaseio.com",
+  projectId: "what-do-you-want-tell-teacher",
+  storageBucket: "what-do-you-want-tell-teacher.firebasestorage.app",
+  messagingSenderId: "614070987596",
+  appId: "1:614070987596:web:3639b0defdb33cc0bcfde9",
+  measurementId: "G-ZY48RBELXE"
+};
 
-    if (name.trim() === "" || room.trim() === "" || teaching.trim() === "" || personality.trim() === "") {
-        alert("กรุณากรอกข้อมูลให้ครบทุกช่อง!");
-        return;
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ตัวแปร DOM
+const form = document.getElementById("feedback-form");
+const messagesContainer = document.getElementById("messages-container");
+const viewMessagesButton = document.getElementById("view-messages-btn");
+const closeMessagesButton = document.getElementById("close-messages-btn");
+
+// ส่งข้อมูลไปยัง Firebase
+form.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const nickname = document.getElementById("nickname").value;
+  const classRoom = document.getElementById("class-room").value;
+  const teachingStyle = document.getElementById("teaching-style").value;
+  const personality = document.getElementById("personality").value;
+
+  const messageId = new Date().getTime(); // ใช้เวลาปัจจุบันเป็น ID
+
+  // สร้างข้อมูลใน Firebase
+  set(ref(db, "messages/" + messageId), {
+    nickname: nickname,
+    classRoom: classRoom,
+    teachingStyle: teachingStyle,
+    personality: personality,
+  }).then(() => {
+    alert("ครูรับเรื่องแล้วจ้า💕");
+  });
+
+  // ล้างข้อมูลจากฟอร์ม
+  form.reset();
+});
+
+// ฟังก์ชันแสดงข้อความทั้งหมด
+viewMessagesButton.addEventListener("click", function () {
+  get(child(ref(db), "messages")).then((snapshot) => {
+    if (snapshot.exists()) {
+      const messages = snapshot.val();
+      let messageHtml = "";
+      for (const messageId in messages) {
+        const message = messages[messageId];
+        messageHtml += `
+          <div class="message-box">
+            <p><strong>นามแฝง/นามในวงการ:</strong> ${message.nickname}</p>
+            <p><strong>ห้อง:</strong> ${message.classRoom}</p>
+            <p><strong>การจัดการเรียนการสอน:</strong> ${message.teachingStyle}</p>
+            <p><strong>ลักษณะบุคลิกภาพ:</strong> ${message.personality}</p>
+          </div>
+        `;
+      }
+      document.getElementById("messages-box").innerHTML = messageHtml;
+      messagesContainer.style.display = "block";
     }
-
-    let messageRef = ref(database, "messages");
-    push(messageRef, {
-        name: name,
-        room: room,
-        teaching: teaching,
-        personality: personality
-    }).then(() => {
-        alert("ครูรับเรื่องแล้วจ้า💕");
-        createFloatingHeart(name, room, teaching, personality);
-        clearForm();
-    }).catch((error) => {
-        console.error("Error sending message:", error);
-    });
+  });
 });
 
-// ฟังก์ชันล้างข้อมูลหลังส่ง
-function clearForm() {
-    document.getElementById("name").value = "";
-    document.getElementById("room").value = "";
-    document.getElementById("teaching").value = "";
-    document.getElementById("personality").value = "";
-}
-
-// ฟังก์ชันสร้างหัวใจ + ข้อความลอยขึ้น
-function createFloatingHeart(name, room, teaching, personality) {
-    let floatingContainer = document.querySelector(".floating-container");
-
-    let floatingItem = document.createElement("div");
-    floatingItem.classList.add("floating-item");
-    floatingItem.style.left = `${Math.random() * 80 + 10}%`;
-
-    let heartImg = document.createElement("img");
-    heartImg.src = "heart.png";
-    heartImg.classList.add("floating-heart");
-
-    let floatingMessage = document.createElement("div");
-    floatingMessage.classList.add("floating-message");
-    floatingMessage.innerHTML = `<b>${name}</b> (${room})<br>${teaching}<br>${personality}`;
-
-    floatingItem.appendChild(heartImg);
-    floatingItem.appendChild(floatingMessage);
-    floatingContainer.appendChild(floatingItem);
-
-    setTimeout(() => {
-        floatingItem.remove();
-    }, 12000);
-}
-
-// ฟังก์ชันเปิดดูข้อความทั้งหมด
-document.getElementById("view-messages-btn").addEventListener("click", () => {
-    let messagesContainer = document.getElementById("messages-container");
-    let messagesBox = document.getElementById("messages-box");
-
-    messagesBox.innerHTML = "<p>กำลังโหลดข้อมูล...</p>";
-
-    let messageRef = ref(database, "messages");
-    onValue(messageRef, (snapshot) => {
-        messagesBox.innerHTML = "";
-        if (snapshot.exists()) {
-            snapshot.forEach((childSnapshot) => {
-                let data = childSnapshot.val();
-                let messageItem = document.createElement("div");
-                messageItem.classList.add("message-box");
-                messageItem.innerHTML = `<b>${data.name}</b> (${data.room})<br>${data.teaching}<br>${data.personality}`;
-                messagesBox.appendChild(messageItem);
-            });
-        } else {
-            messagesBox.innerHTML = "<p>ยังไม่มีข้อความ</p>";
-        }
-    });
-
-    messagesContainer.style.display = "block";
-});
-
-// ปิดหน้าต่างข้อความทั้งหมด
-document.getElementById("close-messages-btn").addEventListener("click", () => {
-    document.getElementById("messages-container").style.display = "none";
+// ฟังก์ชันปิดการดูข้อความทั้งหมด
+closeMessagesButton.addEventListener("click", function () {
+  messagesContainer.style.display = "none";
 });
